@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>敏宇与小伶</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            color: #7e294a;
+            background:
+                radial-gradient(circle at 15% 10%, #ffd9e7 0, transparent 32%),
+                radial-gradient(circle at 85% 30%, #f5b1cc 0, transparent 34%),
+                linear-gradient(180deg, #481326 0%, #b64d78 36%, #ffe4ee 78%, #fff7fa 100%);
+            overflow-x: hidden;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+        /* 背景漂浮爱心 */
+        .floating-heart {
+            position: fixed;
+            bottom: -50px;
+            z-index: 1;
+            color: rgba(255, 255, 255, 0.55);
+            pointer-events: none;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 0;
+                transform: translateY(0) rotate(0deg);
+            }
+
+            15% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-115vh) rotate(360deg);
+            }
+        }
+
+        /* 顶部大图 */
+        .hero {
+            position: relative;
+            width: 100%;
+            min-height: 760px;
+            display: flex;
+            align-items: flex-end;
+            overflow: hidden;
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(24, 3, 12, 0.68) 0%,
+                    rgba(35, 5, 17, 0.28) 45%,
+                    rgba(35, 5, 17, 0.08) 70%
+                ),
+                linear-gradient(
+                    to bottom,
+                    rgba(20, 0, 8, 0.12) 0%,
+                    rgba(20, 0, 8, 0.05) 55%,
+                    #f5afc9 100%
+                ),
+                url("photo.jpg");
+
+           background-size: contain;
+background-repeat: no-repeat;
+background-position: center;
+            background-position: center 35%;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -1px;
+            height: 190px;
+            background: linear-gradient(
+                to bottom,
+                transparent,
+                rgba(245, 175, 201, 0.95)
+            );
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 3;
+            width: min(1200px, calc(100% - 48px));
+            margin: 0 auto;
+            padding-bottom: 150px;
+        }
+
+        .hero-name {
+            margin: 0;
+            color: white;
+            font-size: clamp(54px, 8vw, 110px);
+            font-weight: 500;
+            letter-spacing: 8px;
+            text-shadow:
+                0 0 12px #ff76a8,
+                0 0 30px rgba(255, 76, 143, 0.9);
+        }
+
+        .hero-subtitle {
+            margin-top: 12px;
+            color: white;
+            font-size: clamp(20px, 2.5vw, 34px);
+            letter-spacing: 4px;
+            text-shadow: 0 0 12px #c62e65;
+        }
+
+        .hero-quote {
+            margin-top: 65px;
+            color: white;
+            font-size: clamp(18px, 2vw, 25px);
+            line-height: 1.9;
+            text-shadow: 0 0 12px #85173e;
+        }
+
+        .music-button {
+            position: absolute;
+            top: 28px;
+            right: 34px;
+            z-index: 5;
+            padding: 13px 22px;
+            color: white;
+            font-size: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            border-radius: 999px;
+            background: rgba(226, 65, 121, 0.75);
+            box-shadow: 0 10px 30px rgba(196, 38, 91, 0.35);
+            backdrop-filter: blur(12px);
+            cursor: pointer;
+        }
+
+        /* 主体 */
+        .main {
+            position: relative;
+            z-index: 4;
+            width: min(1120px, calc(100% - 40px));
+            margin: -70px auto 0;
+            padding-bottom: 60px;
+        }
+
+        .intro {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .intro h1 {
+            margin: 0;
+            color: #c93167;
+            font-size: clamp(34px, 5vw, 58px);
+            letter-spacing: 4px;
+        }
+
+        .intro p {
+            margin: 12px 0 0;
+            color: #a94468;
+            font-size: 17px;
+        }
+
+        .glass-card {
+            margin-bottom: 24px;
+            padding: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 28px;
+            background: rgba(255, 250, 252, 0.78);
+            box-shadow:
+                0 20px 55px rgba(128, 29, 67, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+        }
+
+        /* 搜索框 */
+        .search-row {
+            display: flex;
+            width: 100%;
+            overflow: hidden;
+            border: 2px solid #f1a9c3;
+            border-radius: 999px;
+            background: white;
+            box-shadow: 0 10px 25px rgba(208, 61, 112, 0.13);
+        }
+
+        .search-row input {
+            flex: 1;
+            min-width: 0;
+            padding: 18px 24px;
+            color: #7d2f4d;
+            font-size: 17px;
+            border: none;
+            outline: none;
+            background: transparent;
+        }
+
+        .search-row button {
+            width: 140px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            background: linear-gradient(135deg, #ee4c81, #d96baa);
+            cursor: pointer;
+        }
+
+        .section-title {
+            margin: 0 0 18px;
+            color: #b92d5d;
+            font-size: 20px;
+        }
+
+        #result {
+            min-height: 130px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            color: #d83f71;
+            font-size: clamp(21px, 3vw, 32px);
+            font-weight: bold;
+            line-height: 1.6;
+            text-align: center;
+            border: 1px solid #f6aec6;
+            border-radius: 22px;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.96),
+                rgba(255, 230, 240, 0.94)
+            );
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .tag {
+            padding: 11px 18px;
+            color: #a82d58;
+            font-size: 15px;
+            border: 1px solid #efb2c8;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.85);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tag:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(188, 48, 96, 0.14);
+        }
+
+        /* 信息卡片 */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .stat {
+            min-height: 200px;
+            padding: 24px 16px;
+            text-align: center;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.68);
+            box-shadow: inset 0 0 24px rgba(224, 99, 143, 0.07);
+        }
+
+        .stat-icon {
+            font-size: 35px;
+        }
+
+        .stat-value {
+            margin-top: 12px;
+            color: #d2386b;
+            font-size: 27px;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            margin-top: 10px;
+            color: #a1516e;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .photo-box {
+            width: 145px;
+            height: 145px;
+            margin: 32px auto 14px;
+            padding: 5px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff679a, white, #d56fa5);
+            box-shadow: 0 12px 35px rgba(188, 44, 96, 0.3);
+        }
+
+        .photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .signature {
+            color: #d14877;
+            font-size: 25px;
+            text-align: center;
+            letter-spacing: 4px;
+        }
+
+        .footer {
+            padding: 18px;
+            color: #a94065;
+            font-size: 18px;
+            text-align: center;
+            letter-spacing: 3px;
+        }
+
+        /* 手机适配 */
+        @media (max-width: 760px) {
+            .hero {
+                min-height: 650px;
+                background-position: center top;
+            }
+
+            .hero-inner {
+                width: calc(100% - 36px);
+                padding-bottom: 130px;
+            }
+
+            .hero-quote {
+                margin-top: 38px;
+            }
+
+            .music-button {
+                top: 18px;
+                right: 16px;
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+
+            .main {
+                width: calc(100% - 24px);
+                margin-top: -55px;
+            }
+
+            .glass-card {
+                padding: 18px;
+                border-radius: 22px;
+            }
+
+            .search-row input {
+                padding: 15px;
+                font-size: 15px;
+            }
+
+            .search-row button {
+                width: 88px;
+                font-size: 16px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .stat {
+                min-height: 165px;
+                padding: 18px 9px;
+            }
+
+            .stat-value {
+                font-size: 21px;
+            }
+
+            .intro h1 {
+                font-size: 34px;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .stat {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="heartContainer"></div>
+
+    <header class="hero">
+
+        <button class="music-button" onclick="musicMessage()">
+            🎵 我们的歌
+        </button>
+
+        <div class="hero-inner">
+            <h1 class="hero-name">敏宇</h1>
+
+            <div class="hero-subtitle">
+                世界因你而美好 ♡
+            </div>
+
+            <div class="hero-quote">
+                遇见你<br>
+                是我最幸运的事 ♡
+            </div>
+        </div>
+
+    </header>
+
+    <main class="main">
+
+        <section class="intro">
+            <h1>♡ 关于小伶 ♡</h1>
+            <p>搜索关键词，发现更多关于她的美好 💗</p>
+        </section>
+
+        <section class="glass-card">
+
+            <div class="search-row">
+                <input
+                    id="searchInput"
+                    type="text"
+                    placeholder="例如：美女、唱歌、打瓦、音乐、富翁"
+                >
+
+                <button onclick="searchLynn()">
+                    搜索
+                </button>
+            </div>
+
+        </section>
+
+        <section class="glass-card">
+
+            <h2 class="section-title">💞 搜索结果</h2>
+
+            <div id="result">
+                💗 小伶是一个超级大美女 🥰
+            </div>
+
+            <h2 class="section-title" style="margin-top: 24px;">
+                🌸 热门关键词
+            </h2>
+
+            <div class="tags">
+                <button class="tag" onclick="quickSearch('美女')">
+                    ❤️ 美女
+                </button>
+
+                <button class="tag" onclick="quickSearch('唱歌')">
+                    🎤 唱歌
+                </button>
+
+                <button class="tag" onclick="quickSearch('打瓦')">
+                    🎮 打瓦
+                </button>
+
+                <button class="tag" onclick="quickSearch('音乐生')">
+                    🎵 音乐生
+                </button>
+
+                <button class="tag" onclick="quickSearch('富翁')">
+                    💰 富翁
+                </button>
+
+                <button class="tag" onclick="quickSearch('全部')">
+                    ✨ 全部介绍
+                </button>
+            </div>
+
+        </section>
+
+        <section class="glass-card">
+
+            <div class="stats">
+
+                <div class="stat">
+                    <div class="stat-icon">💗</div>
+
+                    <div class="stat-value">
+                        <span id="daysTogether">1050</span> 天
+                    </div>
+
+                    <div class="stat-label">
+                        我们认识的天数<br>
+                        每天自动更新
+                    </div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-icon">🗓️</div>
+
+                    <div class="stat-value">
+                        2023.09.21
+                    </div>
+
+                    <div class="stat-label">
+                        我们相识的日子<br>
+                        故事开始的那一天
+                    </div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-icon">⭐</div>
+
+                    <div class="stat-value">
+                        宇宙级别
+                    </div>
+
+                    <div class="stat-label">
+                        我的宝藏女孩<br>
+                        世界第一可爱
+                    </div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-icon">💖</div>
+
+                    <div class="stat-value">
+                        永远爱你
+                    </div>
+
+                    <div class="stat-label">
+                        敏宇 ❤️ 小伶<br>
+                        一直一直在一起
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="photo-box">
+                <img src="photo.jpg" alt="敏宇和小伶">
+            </div>
+
+            <div class="signature">
+                敏宇 ♡ 小伶
+            </div>
+
+        </section>
+
+        <footer class="footer">
+            你是我的小伶，也是我的全世界 ♡
+        </footer>
+
+    </main>
+
+    <script>
+        // 自动计算从2023年9月21日开始的天数
+        function updateDaysTogether() {
+            const startDate = new Date(2023, 8, 21);
+            const today = new Date();
+
+            startDate.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
+
+            const oneDay = 1000 * 60 * 60 * 24;
+
+            const days =
+                Math.floor((today - startDate) / oneDay) + 1;
+
+            document.getElementById("daysTogether").textContent = days;
+        }
+
+        function searchLynn() {
+            const keyword = document
+                .getElementById("searchInput")
+                .value
+                .trim()
+                .toLowerCase();
+
+            const result = document.getElementById("result");
+
+            if (keyword === "") {
+                result.innerHTML = "请先输入一个关键词哦 💕";
+            } else if (
+                keyword.includes("美女") ||
+                keyword.includes("漂亮") ||
+                keyword.includes("好看")
+            ) {
+                result.innerHTML =
+                    "💗 小伶是一个超级大美女，怎么看都特别好看 🥰";
+            } else if (
+                keyword.includes("打瓦") ||
+                keyword.includes("瓦") ||
+                keyword.includes("游戏") ||
+                keyword.includes("无畏契约")
+            ) {
+                result.innerHTML =
+                    "🎮 小伶打瓦特别厉害，是敏宇心里的最强选手！";
+            } else if (
+                keyword.includes("唱歌") ||
+                keyword.includes("声音")
+            ) {
+                result.innerHTML =
+                    "🎤 小伶唱歌特别好听，她的声音是敏宇最喜欢的声音。";
+            } else if (
+                keyword.includes("音乐") ||
+                keyword.includes("音乐生")
+            ) {
+                result.innerHTML =
+                    "🎵 小伶是一名优秀的音乐生，认真又有才华。";
+            } else if (
+                keyword.includes("富翁") ||
+                keyword.includes("有钱") ||
+                keyword.includes("钱")
+            ) {
+                result.innerHTML =
+                    "💰 小伶是一个超级大富翁，也是敏宇最珍贵的宝藏。";
+            } else if (
+                keyword.includes("敏宇")
+            ) {
+                result.innerHTML =
+                    "💞 敏宇是那个会一直爱着小伶、陪伴小伶的人。";
+            } else if (
+                keyword.includes("全部") ||
+                keyword.includes("介绍") ||
+                keyword.includes("小伶")
+            ) {
+                result.innerHTML =
+                    "💖 小伶是一个超级大美女，打瓦很厉害，" +
+                    "是一名优秀的音乐生，唱歌特别好听，" +
+                    "还是敏宇最爱的宝藏女孩。";
+            } else {
+                result.innerHTML =
+                    "暂时没有找到这个内容，试试搜索“全部”吧 🌸";
+            }
+        }
+
+        function quickSearch(keyword) {
+            document.getElementById("searchInput").value = keyword;
+            searchLynn();
+        }
+
+        document
+            .getElementById("searchInput")
+            .addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    searchLynn();
+                }
+            });
+
+        function musicMessage() {
+            alert("这里以后可以放入你们喜欢的歌曲 🎵");
+        }
+
+        function createHearts() {
+            const container =
+                document.getElementById("heartContainer");
+
+            for (let i = 0; i < 24; i++) {
+                const heart = document.createElement("div");
+
+                heart.className = "floating-heart";
+                heart.textContent = Math.random() > 0.5 ? "♡" : "♥";
+
+                heart.style.left =
+                    Math.random() * 100 + "vw";
+
+                heart.style.fontSize =
+                    13 + Math.random() * 23 + "px";
+
+                heart.style.animationDuration =
+                    7 + Math.random() * 9 + "s";
+
+                heart.style.animationDelay =
+                    Math.random() * 10 + "s";
+
+                container.appendChild(heart);
+            }
+        }
+
+        updateDaysTogether();
+        createHearts();
+    </script>
+
+</body>
+</html>
