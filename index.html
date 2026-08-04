@@ -418,7 +418,7 @@ background-position: center;
 
     <header class="hero">
 
-        <button class="music-button" onclick="musicMessage()">
+        <button class="music-button" onclick="musicMessage(this)">
             🎵 我们的歌
         </button>
 
@@ -635,7 +635,7 @@ background-position: center;
                 keyword.includes("钱")
             ) {
                 result.innerHTML =
-                    "💰 小伶是一个超级大富翁，也是敏宇最珍贵的宝藏。";
+                    "💰 小伶是一个超级大富翁，也是小弟最珍贵的宝藏。";
             } else if (
                 keyword.includes("敏宇")
             ) {
@@ -649,7 +649,7 @@ background-position: center;
                 result.innerHTML =
                     "💖 小伶是一个超级大美女，打瓦很厉害，" +
                     "是一名优秀的音乐生，唱歌特别好听，" +
-                    "还是敏宇最爱的宝藏女孩。";
+                    "还是小弟最爱的宝藏女孩。";
             } else {
                 result.innerHTML =
                     "暂时没有找到这个内容，试试搜索“全部”吧 🌸";
@@ -669,9 +669,19 @@ background-position: center;
                 }
             });
 
-        function musicMessage() {
-            alert("这里以后可以放入你们喜欢的歌曲 🎵");
-        }
+        const music = document.getElementById("bgm");
+
+function musicMessage(button) {
+
+    if (music.paused) {
+        music.play();
+        button.innerHTML = "⏸ 暂停音乐";
+    } else {
+        music.pause();
+        button.innerHTML = "🎵 我们的歌";
+    }
+
+}
 
         function createHearts() {
             const container =
@@ -702,6 +712,6 @@ background-position: center;
         updateDaysTogether();
         createHearts();
     </script>
-
+<audio id="bgm" src="love.mp3" loop></audio>
 </body>
 </html>
