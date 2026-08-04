@@ -669,20 +669,27 @@ background-position: center;
                 }
             });
 
-        const music = document.getElementById("bgm");
+       
 
 function musicMessage(button) {
 
+    const music = document.getElementById("bgm");
+
     if (music.paused) {
+
         music.play();
+
         button.innerHTML = "⏸ 暂停音乐";
+
     } else {
+
         music.pause();
+
         button.innerHTML = "🎵 我们的歌";
+
     }
 
 }
-
         function createHearts() {
             const container =
                 document.getElementById("heartContainer");
